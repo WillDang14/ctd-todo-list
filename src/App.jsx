@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import './App.css';
 
@@ -8,17 +8,25 @@ import TodoForm from './TodoForm.jsx';
 
 /* ============================================= */
 function App() {
-  const [newTodo, setNewTodo] = useState('Example Text');
+  const [todoList, setTodoList] = useState([]);
+
+  useEffect(() => {
+    console.log('todoList', todoList);
+  }, [todoList]);
+
+  function handleAddTodo(newTask) {
+    const newTodo = { title: newTask, id: Date.now() };
+
+    setTodoList([...todoList, newTodo]);
+  }
 
   return (
     <div>
       <h1>Todo List</h1>
 
-      <TodoForm />
+      <TodoForm onAddTodo={handleAddTodo} />
 
-      <p>{newTodo}</p>
-
-      <TodoList />
+      <TodoList todoList={todoList} />
     </div>
   );
 }

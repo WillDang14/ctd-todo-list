@@ -25,7 +25,12 @@ const encodeUrl = ({ sortField, sortDirection, queryString }) => {
   let searchQuery = '';
 
   if (queryString) {
-    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+    // searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+
+    // tham khao ==>> https://community.latenode.com/t/how-to-search-airtable-database-using-filterbyformula-in-url/9400/3
+    // "SEARCH" and "FIND" are same
+    // searchQuery = `&filterByFormula=FIND(LOWER("${queryString}"),LOWER({title}))`;
+    searchQuery = `&filterByFormula=SEARCH(LOWER("${queryString}"),LOWER({title}))`;
   }
 
   return encodeURI(`${url}?${sortQuery}${searchQuery}`);

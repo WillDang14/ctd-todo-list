@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import './App.css';
 
@@ -18,23 +18,23 @@ const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
 /* ============================================= */
-const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-  //
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+// const encodeUrl = ({ sortField, sortDirection, queryString }) => {
+//   //
+//   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
 
-  let searchQuery = '';
+//   let searchQuery = '';
 
-  if (queryString) {
-    // searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+//   if (queryString) {
+//     // searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
 
-    // tham khao ==>> https://community.latenode.com/t/how-to-search-airtable-database-using-filterbyformula-in-url/9400/3
-    // "SEARCH" and "FIND" are same
-    // searchQuery = `&filterByFormula=FIND(LOWER("${queryString}"),LOWER({title}))`;
-    searchQuery = `&filterByFormula=SEARCH(LOWER("${queryString}"),LOWER({title}))`;
-  }
+//     // tham khao ==>> https://community.latenode.com/t/how-to-search-airtable-database-using-filterbyformula-in-url/9400/3
+//     // "SEARCH" and "FIND" are same
+//     // searchQuery = `&filterByFormula=FIND(LOWER("${queryString}"),LOWER({title}))`;
+//     searchQuery = `&filterByFormula=SEARCH(LOWER("${queryString}"),LOWER({title}))`;
+//   }
 
-  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-};
+//   return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+// };
 
 /* ============================================= */
 function App() {
@@ -53,6 +53,20 @@ function App() {
   //   console.log('todoList', todoList);
   // }, [todoList]);
 
+  // Week9
+  const encodeUrl = useCallback(() => {
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+
+    let searchQuery = '';
+
+    if (queryString) {
+      // searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+      searchQuery = `&filterByFormula=SEARCH(LOWER("${queryString}"),LOWER({title}))`;
+    }
+
+    return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+  }, [sortField, sortDirection, queryString]);
+
   //
   useEffect(() => {
     //
@@ -62,11 +76,11 @@ function App() {
       const options = fetchOptions('Get', token);
 
       try {
-        // const resp = await fetch(url, options);
-        const resp = await fetch(
-          encodeUrl({ sortField, sortDirection, queryString }),
-          options
-        );
+        // const resp = await fetch(
+        //   encodeUrl({ sortField, sortDirection, queryString }),
+        //   options
+        // );
+        const resp = await fetch(encodeUrl(), options);
         console.log('resp = ', resp);
 
         if (!resp.ok) {
@@ -90,7 +104,7 @@ function App() {
 
         // extract Object property "records" from data response
         const { records } = await resp.json();
-        console.log('Airtable records = ', records);
+        // console.log('Airtable records = ', records);
 
         const fetchedRecords = records.map((record) => {
           //
@@ -121,7 +135,8 @@ function App() {
     };
 
     fetchTodos();
-  }, [sortField, sortDirection, queryString]);
+    // }, [sortField, sortDirection, queryString]);
+  }, [encodeUrl]);
 
   ///////////////////////////////////////////////////////////////////////////
   async function handleAddTodo(newTodo) {
@@ -132,11 +147,11 @@ function App() {
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(url, options);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      // const resp = await fetch(
+      //   encodeUrl({ sortField, sortDirection, queryString }),
+      //   options
+      // );
+      const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
         const status = resp.status;
@@ -170,10 +185,11 @@ function App() {
 
       // ====================================== //
       // tu them vo ==>> moi khi add them data thi tu dong sap xep lai
-      const respNew = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        fetchOptions('Get', token)
-      );
+      // const respNew = await fetch(
+      //   encodeUrl({ sortField, sortDirection, queryString }),
+      //   fetchOptions('Get', token)
+      // );
+      const respNew = await fetch(encodeUrl(), fetchOptions('Get', token));
 
       const { records } = await respNew.json();
 
@@ -213,11 +229,11 @@ function App() {
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(url, options);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      // const resp = await fetch(
+      //   encodeUrl({ sortField, sortDirection, queryString }),
+      //   options
+      // );
+      const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
         const status = resp.status;
@@ -286,16 +302,16 @@ function App() {
       editedTodo.id
     );
 
-    const options = fetchOptions('patch', token, payload);
+    const options = fetchOptions('Patch', token, payload);
 
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(url, options);
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection, queryString }),
-        options
-      );
+      // const resp = await fetch(
+      //   encodeUrl({ sortField, sortDirection, queryString }),
+      //   options
+      // );
+      const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
         const status = resp.status;

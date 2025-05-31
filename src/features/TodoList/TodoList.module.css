@@ -1,0 +1,15 @@
+.list_container {
+  padding: 0;
+
+  list-style: none;
+
+  margin: 2rem 0;
+}
+
+.list_container input {
+  margin-left: 0;
+}
+
+.list_container span {
+  margin-left: 6px;
+}

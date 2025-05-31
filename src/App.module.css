@@ -1,0 +1,43 @@
+.container {
+  margin: 24px auto;
+
+  width: 640px;
+
+  padding: 0 24px 24px;
+
+  /* background: #adcacc; */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  backdrop-filter: blur(10.5px);
+  -webkit-backdrop-filter: blur(10.5px);
+
+  /* border: 2px solid rgba(255, 255, 255, 0.31); */
+  border: 2px solid rgba(255, 255, 255, 0.51);
+}
+
+.error_message {
+  border: 2px solid red;
+}
+
+.error_message p {
+  text-align: center;
+
+  font-size: 2rem;
+}
+
+.error_message button {
+  margin: 0 auto;
+
+  display: block;
+  margin-bottom: 18px;
+
+  padding: 8px 14px;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: #a7a7a7;
+  }
+}

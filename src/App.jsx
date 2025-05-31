@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import './App.css';
+import styles from './App.module.css';
 
 import TodoList from './features/TodoList/TodoList';
 
@@ -16,25 +17,6 @@ const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
 }`;
 
 const token = `Bearer ${import.meta.env.VITE_PAT}`;
-
-/* ============================================= */
-// const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-//   //
-//   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-
-//   let searchQuery = '';
-
-//   if (queryString) {
-//     // searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
-
-//     // tham khao ==>> https://community.latenode.com/t/how-to-search-airtable-database-using-filterbyformula-in-url/9400/3
-//     // "SEARCH" and "FIND" are same
-//     // searchQuery = `&filterByFormula=FIND(LOWER("${queryString}"),LOWER({title}))`;
-//     searchQuery = `&filterByFormula=SEARCH(LOWER("${queryString}"),LOWER({title}))`;
-//   }
-
-//   return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-// };
 
 /* ============================================= */
 function App() {
@@ -76,10 +58,6 @@ function App() {
       const options = fetchOptions('Get', token);
 
       try {
-        // const resp = await fetch(
-        //   encodeUrl({ sortField, sortDirection, queryString }),
-        //   options
-        // );
         const resp = await fetch(encodeUrl(), options);
         console.log('resp = ', resp);
 
@@ -147,10 +125,6 @@ function App() {
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(
-      //   encodeUrl({ sortField, sortDirection, queryString }),
-      //   options
-      // );
       const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
@@ -229,10 +203,6 @@ function App() {
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(
-      //   encodeUrl({ sortField, sortDirection, queryString }),
-      //   options
-      // );
       const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
@@ -307,10 +277,6 @@ function App() {
     try {
       setIsSaving(true);
 
-      // const resp = await fetch(
-      //   encodeUrl({ sortField, sortDirection, queryString }),
-      //   options
-      // );
       const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok) {
@@ -373,7 +339,7 @@ function App() {
 
   ///////////////////////////////////////////////////////////////////////////
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Todo List</h1>
 
       <TodoForm onAddTodo={handleAddTodo} isSaving={isSaving} />
@@ -397,13 +363,15 @@ function App() {
       />
 
       {errorMessage ? (
-        <div>
+        <>
           <hr />
-          <p>{errorMessage}</p>
-          <button onClick={() => setErrorMessage('')}>
-            Dismiss Error Message
-          </button>
-        </div>
+          <div className={styles.error_message}>
+            <p>{errorMessage}</p>
+            <button onClick={() => setErrorMessage('')}>
+              Dismiss Error Message
+            </button>
+          </div>
+        </>
       ) : null}
     </div>
   );

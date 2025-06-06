@@ -3,14 +3,14 @@ import { useState, useEffect, useCallback, useMemo, useReducer } from 'react';
 import './App.css';
 import styles from './App.module.css';
 
-import TodoList from './features/TodoList/TodoList';
+// import TodoList from './features/TodoList/TodoList';
 
-import TodoForm from './features/TodoForm';
+// import TodoForm from './features/TodoForm';
 
 import fetchOptions from './shared/FetchOptions'; // for Stretch Goals: Refactor for Reusable Code ==>> Week 7
 import fetchPayload from './shared/FetchPayload'; // for Stretch Goals: Refactor for Reusable Code ==>> Week 7
 
-import TodosViewForm from './features/TodosViewForm';
+// import TodosViewForm from './features/TodosViewForm';
 
 import {
   reducer as todosReducer,
@@ -18,6 +18,13 @@ import {
   initialState as initialTodosState,
 } from './reducers/todos.reducer';
 
+// week12
+import TodosPage from './pages/TodosPage';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
+
+import Header from './shared/Header';
+import { useLocation, Routes, Route } from 'react-router';
 /* ============================================= */
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${
   import.meta.env.VITE_TABLE_NAME
@@ -29,6 +36,9 @@ const token = `Bearer ${import.meta.env.VITE_PAT}`;
 let n = 0;
 /* ============================================= */
 function App() {
+  // week12
+  const [title, setTitle] = useState('Todo List');
+
   // useReducer week11
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
   console.log(++n, ' todoState = ', todoState);
@@ -50,6 +60,9 @@ function App() {
 
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   }, [todoState.sortField, todoState.sortDirection, todoState.queryString]);
+
+  // week12
+  const location = useLocation();
 
   ///////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
@@ -111,6 +124,19 @@ function App() {
     fetchTodos();
   }, [encodeUrl]);
 
+  // week12
+  useEffect(() => {
+    // console.log('location.pathname= ', location.pathname);
+
+    if (location.pathname === '/') {
+      setTitle('Todo List');
+    } else if (location.pathname === '/about') {
+      setTitle('About');
+    } else {
+      setTitle('Not Found');
+      // setTitle('');
+    }
+  }, [location]);
   ///////////////////////////////////////////////////////////////////////////////////
   async function handleAddTodo(newTodo) {
     console.log('handleAddTodo Start!');
@@ -344,20 +370,21 @@ function App() {
   ///////////////////////////////////////////////////////////////////////////////////
   return (
     <div className={styles.container}>
-      <h1>Todo List</h1>
+      {/* <h1>Todo List</h1> */}
+      <Header title={title} />
 
-      <TodoForm onAddTodo={handleAddTodo} isSaving={todoState.isSaving} />
+      {/* <TodoForm onAddTodo={handleAddTodo} isSaving={todoState.isSaving} /> */}
 
-      <TodoList
+      {/* <TodoList
         todoList={todoState.todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         isLoading={todoState.isLoading}
-      />
+      /> */}
 
-      <hr />
+      {/* <hr /> */}
 
-      <TodosViewForm
+      {/* <TodosViewForm
         sortDirection={todoState.sortDirection}
         setSortDirection={(sortDirection) =>
           dispatch({ type: todoActions.sortDirection, sortDirection })
@@ -370,7 +397,27 @@ function App() {
         setQueryString={(queryString) =>
           dispatch({ type: todoActions.queryString, queryString })
         }
-      />
+      /> */}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <TodosPage
+              todoState={todoState}
+              todoActions={todoActions}
+              dispatch={dispatch}
+              handleAddTodo={handleAddTodo}
+              completeTodo={completeTodo}
+              updateTodo={updateTodo}
+            />
+          }
+        />
+
+        <Route path="/about" element={<About />} />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
 
       {todoState.errorMessage ? (
         <>

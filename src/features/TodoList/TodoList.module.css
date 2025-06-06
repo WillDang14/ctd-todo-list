@@ -13,3 +13,38 @@
 .list_container span {
   margin-left: 6px;
 }
+
+/* ======================================== */
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 1rem 0;
+  /* border: 1px solid red; */
+}
+
+.paginationControls button {
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(189, 189, 189);
+  }
+}
+
+/* ======================================== */
+.paginationControls select {
+  padding: 10px 15px;
+}
+
+/* ======================================== */
+.paginationControls input {
+  border-radius: 0;
+  padding: 10px 15px;
+}
